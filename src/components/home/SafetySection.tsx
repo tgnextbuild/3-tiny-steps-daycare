@@ -9,7 +9,7 @@ export function SafetySection() {
       <Container>
         <div className="grid gap-8 rounded-[2.5rem] bg-light-yellow/45 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-2 lg:items-center lg:gap-14">
           <div>
-            <h2 className="text-h2 font-heading font-bold leading-snug text-ink">
+            <h2 className="text-h2 font-heading leading-snug text-ink">
               {safety.headingPrefix}
               <br />
               <span className="text-green-dark">{safety.headingAccent}</span>

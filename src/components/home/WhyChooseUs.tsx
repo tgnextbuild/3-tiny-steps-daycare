@@ -19,7 +19,7 @@ export function WhyChooseUs() {
               >
                 <IconBadge icon={item.icon} accent={item.accent} size="lg" />
                 <span
-                  className={`font-heading text-h3 leading-snug font-bold ${accentClasses[item.accent].text}`}
+                  className={`font-heading text-h3 leading-snug ${accentClasses[item.accent].text}`}
                 >
                   {item.label}
                 </span>
