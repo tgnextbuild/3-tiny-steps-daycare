@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fdfbf6;
+  --foreground: #2b2420;
+
+  /* Primary palette (spec) */
+  --color-green: #9cc872;
+  --color-crimson: #fdc4d0;
+  --color-azure: #4399bd;
+  --color-pastel-azure: #99daf6;
+
+  /* Text / accent palette (spec) */
+  --color-ink: #2b2420;
+  --color-pastel-red: #ff9384;
+  --color-light-yellow: #ffe99f;
+
+  /* Tonal support shades derived from the palette, used for tints/borders/hovers */
+  --color-green-dark: #7cab55;
+  --color-green-tint: #eef6e5;
+  --color-crimson-dark: #f7a3b6;
+  --color-crimson-tint: #fef1f4;
+  --color-azure-dark: #35809f;
+  --color-azure-tint: #eaf7fb;
+  --color-pastel-azure-tint: #eaf9fd;
+  --color-cream: #fdfbf6;
+  --color-cream-dark: #f7f0e4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-green: var(--color-green);
+  --color-green-dark: var(--color-green-dark);
+  --color-green-tint: var(--color-green-tint);
+  --color-crimson: var(--color-crimson);
+  --color-crimson-dark: var(--color-crimson-dark);
+  --color-crimson-tint: var(--color-crimson-tint);
+  --color-azure: var(--color-azure);
+  --color-azure-dark: var(--color-azure-dark);
+  --color-azure-tint: var(--color-azure-tint);
+  --color-pastel-azure: var(--color-pastel-azure);
+  --color-pastel-azure-tint: var(--color-pastel-azure-tint);
+  --color-pastel-red: var(--color-pastel-red);
+  --color-light-yellow: var(--color-light-yellow);
+  --color-ink: var(--color-ink);
+  --color-cream: var(--color-cream);
+  --color-cream-dark: var(--color-cream-dark);
+
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+
+  /* Type scale straight from the spec (1pt = 1.333px), clamped so H1/H2
+     don't feel cramped on very small phones without ever exceeding the
+     spec size on larger screens. */
+  --text-h1: clamp(1.65rem, 5.5vw, 2.0825rem);
+  --text-h1--line-height: 1.15;
+  --text-h2: clamp(1.4rem, 4vw, 1.6675rem);
+  --text-h2--line-height: 1.2;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-nav: 1.25rem;
+  --text-nav--line-height: 1.2;
+  --text-button: 1rem;
+  --text-button--line-height: 1.2;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), ui-rounded, sans-serif;
+}
+
+/* Browsers only give <a href> a pointer cursor by default — <button> stays
+   the plain arrow unless told otherwise. Every button here doubles as a
+   clickable card/toggle/link, so make the cursor say so everywhere. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* Consistent, visible keyboard focus everywhere, including for custom
+   interactive elements (cards, accordions). */
+:focus-visible {
+  outline: 3px solid var(--color-azure);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Keeps the sticky header from covering the top of a section when jumping
+   to it via a "#anchor" link (e.g. from search results) — applies to every
+   anchor target site-wide, so individual sections don't each need their
+   own scroll-margin. */
+html {
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
