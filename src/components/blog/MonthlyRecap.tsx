@@ -9,7 +9,11 @@ export function MonthlyRecap({ post }: { post: AccentedBlogPost }) {
 
   return (
     <article id="recap" className={`overflow-hidden rounded-[2rem] ${colors.bgTint}`}>
-      <div className="-ml-6 pt-6 sm:-ml-10 sm:pt-8">
+      {/* pt-8 matches the panel's rounded-[2rem] corner radius exactly, so
+          the ribbon's square left edge starts right where the curve ends —
+          flush against the straight part of the panel's edge, not bled
+          outside it or clipped by the corner. */}
+      <div className="pt-8">
         <MonthRibbon month={post.month} className="shadow-sm" />
       </div>
 
