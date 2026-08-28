@@ -22,6 +22,7 @@ export function Testimonials() {
       <ul className="mt-5 flex flex-col gap-4">
         {testimonials.map((t, i) => {
           const isOpen = expanded.has(i);
+          const hasMore = Boolean(t.more);
           return (
             <li key={t.name} className="rounded-2xl bg-white p-5">
               <div className="flex items-center gap-2">
@@ -39,15 +40,19 @@ export function Testimonials() {
               </div>
               <p className="mt-2 text-body text-ink/70">
                 {t.preview}
-                {isOpen ? " " + t.more : "… "}
-                <button
-                  type="button"
-                  onClick={() => toggle(i)}
-                  aria-expanded={isOpen}
-                  className="font-medium text-azure underline-offset-2 hover:underline"
-                >
-                  {isOpen ? "Show less" : "read more"}
-                </button>
+                {hasMore && (
+                  <>
+                    {isOpen ? " " + t.more + " " : "… "}
+                    <button
+                      type="button"
+                      onClick={() => toggle(i)}
+                      aria-expanded={isOpen}
+                      className="font-medium text-azure underline-offset-2 hover:underline"
+                    >
+                      {isOpen ? "Show less" : "read more"}
+                    </button>
+                  </>
+                )}
               </p>
             </li>
           );

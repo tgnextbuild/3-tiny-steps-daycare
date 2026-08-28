@@ -3,22 +3,40 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { navLinks, siteConfig } from "@/data/site";
+import { useClickOutside } from "@/lib/useClickOutside";
 
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Close the mobile menu on route change.
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
+  // Close the mobile menu when the user taps/clicks outside of it. The
+  // toggle button counts as "inside" so its own handler owns opening and
+  // closing, rather than both firing on the same tap.
+  useClickOutside(menuOpen, [menuRef, toggleRef], () => setMenuOpen(false));
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  // Tapping the page you're already on doesn't trigger a route change, so
+  // the pathname-change effect above never fires — close the menu and
+  // scroll up explicitly for that case.
+  const handleNavLinkClick = (href: string) => {
+    setMenuOpen(false);
+    if (isActive(href)) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-green-tint/95 backdrop-blur supports-[backdrop-filter]:bg-green-tint/80">
@@ -62,6 +80,7 @@ export function Header() {
 
         <button
           type="button"
+          ref={toggleRef}
           onClick={() => setMenuOpen((open) => !open)}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
@@ -75,6 +94,7 @@ export function Header() {
       {menuOpen && (
         <nav
           id="mobile-nav"
+          ref={menuRef}
           aria-label="Primary"
           className="border-t border-ink/10 bg-green-tint px-5 pt-2 pb-5 lg:hidden"
         >
@@ -83,6 +103,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
+                  onClick={() => handleNavLinkClick(link.href)}
                   aria-current={isActive(link.href) ? "page" : undefined}
                   className={`block rounded-xl px-3 py-2.5 font-heading text-nav ${
                     isActive(link.href)

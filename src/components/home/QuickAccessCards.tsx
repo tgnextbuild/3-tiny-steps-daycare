@@ -39,14 +39,25 @@ export function QuickAccessCards() {
             return (
               <li key={card.title}>
                 {card.action === "download" ? (
-                  <a
-                    href={card.href}
-                    download
-                    className={cardClasses}
-                    aria-label={`${card.title} — download PDF`}
-                  >
-                    {inner}
-                  </a>
+                  <div className="relative">
+                    <a
+                      href={card.href}
+                      download
+                      className={cardClasses}
+                      aria-label={`${card.title} — download PDF`}
+                    >
+                      {inner}
+                    </a>
+                    <a
+                      href={card.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${card.title} — preview PDF in a new tab`}
+                      className={`absolute top-3 right-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-white/80 ${colors.text} shadow-sm transition-colors hover:bg-white`}
+                    >
+                      <Icon name="eye" className="size-4" />
+                    </a>
+                  </div>
                 ) : (
                   <Link href={card.href} className={cardClasses}>
                     {inner}

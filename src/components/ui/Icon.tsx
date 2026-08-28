@@ -26,6 +26,7 @@ export type IconName =
   | "menu"
   | "close"
   | "download"
+  | "eye"
   | "instagram"
   | "tiktok"
   | "facebook"
@@ -42,6 +43,7 @@ export type IconName =
   | "document-pen"
   | "parking"
   | "check"
+  | "error-circle"
   | "sun";
 
 /**
@@ -269,6 +271,13 @@ export function Icon({
           <path d="M4.5 17v2.5a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V17" />
         </svg>
       );
+    case "eye":
+      return (
+        <svg {...common}>
+          <path d="M2.5 12S5.8 5.5 12 5.5 21.5 12 21.5 12 18.2 18.5 12 18.5 2.5 12 2.5 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      );
     case "instagram":
       return (
         <svg {...common}>
@@ -399,6 +408,18 @@ export function Icon({
         <svg {...common}>
           <circle cx="12" cy="12" r="8.5" />
           <path d="m8 12.3 2.6 2.6 5.4-5.6" />
+        </svg>
+      );
+    case "error-circle":
+      // Pairs visually with "check" (circle + mark) for status states, but
+      // deliberately distinct from "close" — that one already means
+      // "dismiss this panel" elsewhere on the site (mobile nav, modals),
+      // so reusing it for "this failed" would overload the same glyph
+      // with two unrelated meanings.
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="m9 9 6 6M15 9l-6 6" />
         </svg>
       );
     case "sun":

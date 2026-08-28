@@ -1,3 +1,4 @@
+import { findGalleryPhoto } from "@/data/gallery";
 import type { AccentColor } from "@/types/content";
 
 /* ------------------------------------------------------------------ *
@@ -110,9 +111,14 @@ export const dailySchedule: ScheduleBlock[] = [
   },
 ];
 
-/** The three photos shown beside the schedule. */
+/**
+ * The three photos shown beside the schedule, named by filename so their
+ * labels stay owned by `gallery.ts` — the one place every photo is
+ * described. Swap a photo by changing a filename here to any other in
+ * `galleryPhotos`; edit its caption in `gallery.ts` and it updates here too.
+ */
 export const dailyScheduleGallery = [
-  { filename: "day-gallery-1.jpg", label: "\"Amazing things happen here\" classroom wall" },
-  { filename: "day-gallery-2.jpg", label: "Math learning wall with shapes and numbers" },
-  { filename: "day-gallery-3.jpg", label: "Science wall with toy dinosaurs" },
-];
+  "day-gallery-1.jpg",
+  "day-gallery-2.jpg",
+  "day-gallery-3.jpg",
+].map(findGalleryPhoto);

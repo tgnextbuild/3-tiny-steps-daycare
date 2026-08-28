@@ -6,6 +6,32 @@ import { faqHeading, faqItems } from "@/data/faqs";
 import { slugify } from "@/lib/slugify";
 import { useOpenFromQuery } from "@/lib/useOpenFromQuery";
 
+/**
+ * Turns `**bold**` and `__underline__` markers in a paragraph into the
+ * matching HTML — the only formatting FAQ answers support, kept simple on
+ * purpose so `faqs.ts` never needs real HTML or Markdown.
+ */
+function renderFormattedText(text: string) {
+  const pattern = /\*\*(.+?)\*\*|__(.+?)__/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    if (match[1] !== undefined) {
+      parts.push(<strong key={key++}>{match[1]}</strong>);
+    } else {
+      parts.push(<u key={key++}>{match[2]}</u>);
+    }
+    lastIndex = pattern.lastIndex;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+
+  return parts;
+}
+
 export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const idBase = useId();
@@ -58,9 +84,13 @@ export function FAQSection() {
                 role="region"
                 aria-labelledby={buttonId}
                 hidden={!isOpen}
-                className="px-5 pb-4"
+                className="flex flex-col gap-3 px-5 pb-4"
               >
-                <p className="text-body text-ink/70">{item.answer}</p>
+                {item.answer.map((paragraph, pIdx) => (
+                  <p key={pIdx} className="text-body text-ink/70">
+                    {renderFormattedText(paragraph)}
+                  </p>
+                ))}
               </div>
             </li>
           );

@@ -8,7 +8,7 @@ import type { Photo } from "@/types/content";
 
 export const contactHero = {
   heading: "Contact Us",
-  body: "We'd love to hear from you! Reach out to ask a question, schedule a tour, or start the enrollment process — our team typically responds within one business day.",
+  body: "We'd love to hear from you! Reach out to ask a question, schedule a tour, or start the enrollment process — our team typically responds within 3–5 business days.",
   image: { filename: "contact-hero.jpg", label: "Shelf of toys in the classroom" } as Photo,
 };
 

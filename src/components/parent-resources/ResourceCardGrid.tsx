@@ -72,12 +72,20 @@ export function ResourceCardGrid({
               {active.title}
             </h3>
             <p className="mt-2 text-body text-ink/70">{active.body}</p>
-            <a href={`/documents/${active.filename}`} download className="mt-5 inline-block">
-              <Button variant="secondary">
-                <Icon name="download" className="size-4" />
-                Download
-              </Button>
-            </a>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a href={`/documents/${active.filename}`} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline">
+                  <Icon name="eye" className="size-4" />
+                  Preview
+                </Button>
+              </a>
+              <a href={`/documents/${active.filename}`} download>
+                <Button variant="secondary">
+                  <Icon name="download" className="size-4" />
+                  Download
+                </Button>
+              </a>
+            </div>
           </div>
         )}
       </Modal>

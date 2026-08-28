@@ -78,60 +78,16 @@ export const galleryPhotos: GalleryPhoto[] = [
     date: "2026-07",
   },
 
-  // // ---- June 2026 recap ----
+  // ---- Add next month's recap photos here ----
+  // Copy the block below, uncomment it, and change the filenames, labels,
+  // and date. Group each month together under its own heading like the
+  // July block above, newest month first.
+  //
+  // // ---- August 2026 recap ----
   // {
-  //   filename: "gallery/recap-june-2026.jpg",
-  //   label: "Children exploring the garden beds outside",
-  //   date: "2026-06",
-  // },
-  // {
-  //   filename: "gallery/recap-june-2026-1.jpg",
-  //   label: "Planting seeds in the garden",
-  //   date: "2026-06",
-  // },
-  // {
-  //   filename: "gallery/recap-june-2026-2.jpg",
-  //   label: "Hand-print tree art project",
-  //   date: "2026-06",
-  // },
-  // {
-  //   filename: "gallery/recap-june-2026-3.jpg",
-  //   label: "Playing on the outdoor slide",
-  //   date: "2026-06",
-  // },
-
-  // // ---- May 2026 recap (placeholder) ----
-  // {
-  //   filename: "gallery/recap-may-2026.jpg",
-  //   label: "Placeholder — replace with a May photo",
-  //   date: "2026-05",
-  // },
-  // {
-  //   filename: "gallery/recap-may-2026-1.jpg",
-  //   label: "Placeholder — replace with a May photo",
-  //   date: "2026-05",
-  // },
-  // {
-  //   filename: "gallery/recap-may-2026-2.jpg",
-  //   label: "Placeholder — replace with a May photo",
-  //   date: "2026-05",
-  // },
-
-  // // ---- April 2026 recap (placeholder) ----
-  // {
-  //   filename: "gallery/recap-april-2026.jpg",
-  //   label: "Placeholder — replace with an April photo",
-  //   date: "2026-04",
-  // },
-  // {
-  //   filename: "gallery/recap-april-2026-1.jpg",
-  //   label: "Placeholder — replace with an April photo",
-  //   date: "2026-04",
-  // },
-  // {
-  //   filename: "gallery/recap-april-2026-2.jpg",
-  //   label: "Placeholder — replace with an April photo",
-  //   date: "2026-04",
+  //   filename: "gallery/recap-august-2026.jpg",
+  //   label: "Short description of the photo",
+  //   date: "2026-08",
   // },
 
   // ---- General daycare photos (not tied to a specific month) ----

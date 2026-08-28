@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 
 import { Icon } from "@/components/ui/Icon";
 import { searchIndex } from "@/data/search-index";
 import { searchEntries } from "@/lib/search";
+import { useClickOutside } from "@/lib/useClickOutside";
 
 /**
  * Site-wide search: fuzzy-matches against `searchIndex` as you type and
@@ -33,16 +34,7 @@ export function SearchBox({
     setActiveIndex(-1);
   }, [query]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onPointerDown);
-    return () => document.removeEventListener("mousedown", onPointerDown);
-  }, [open]);
+  useClickOutside(open, [wrapperRef], () => setOpen(false));
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {

@@ -103,7 +103,7 @@ export const searchIndex: SearchEntry[] = [
     (faq): SearchEntry => ({
       title: faq.question,
       section: "Frequently Asked Questions",
-      keywords: faq.answer,
+      keywords: faq.answer.join(" "),
       url: `/parent-resources?open=faq-${slugify(faq.question)}`,
     }),
   ),
