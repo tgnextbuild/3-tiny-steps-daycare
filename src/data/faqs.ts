@@ -24,40 +24,41 @@ export const faqItems: FaqItem[] = [
   {
     question: "What is your sick policy?",
     answer: [
-      "To keep everyone healthy, please keep your child home if they have a fever, are vomiting, or have a contagious illness. Children may return once they've been symptom- and fever-free for 24 hours without medication.",
-      "Placeholder policy — replace with your official written sick policy.",
+      "Children should stay home if they have a fever of 101°F or higher, vomiting, diarrhea, excessive cold symptoms, unexplained pain/discomfort, or are too ill to participate normally in daily activities.",
+      "Children may return once they meet the appropriate return-to-care requirements, such as being fever-free for 24 hours without medication or being symptom-free for 24 hours for vomiting/diarrhea. Certain illnesses require treatment before returning.",
+      "**Please refer to the Parent Handbook for complete sick policy and return-to-care guidelines.**",
     ],
   },
   {
     question: "What happens if my child is injured while at the daycare?",
     answer: [
-      "Minor injuries are cleaned and treated with our on-site first aid kit, and you'll receive a note or call about what happened. For anything more serious, we contact you immediately and call 911 if needed.",
-      "Placeholder policy — replace with your official written policy.",
+      "Staff will assess the injury and provide First Aid/CPR if needed. For serious emergencies, 911 will be called and parents notified immediately. Minor injuries will be communicated to parents, while more serious injuries will require an accident report. If parents cannot be reached, an emergency contact will be notified.",
+      "**Please refer to the Parent Handbook for the full injury and emergency procedures.**",
     ],
   },
   {
     question: "Are your staff certified in CPR and First Aid?",
     answer: [
-      "Yes — all of our staff are certified in CPR and First Aid, and complete ongoing health and safety training.",
+      "Yes! All 3 Tiny Steps staff members are certified in CPR and First Aid. We also ensure that all required licenses and certifications remain current and comply with state guidelines to provide the safest, highest-quality care for every child.",
     ],
   },
   {
     question: "How do you keep your children safe during drop-off and pick-up?",
     answer: [
-      "Children are only released to parents/guardians or people you've listed on your written authorization form, and we verify photo ID for anyone we don't recognize.",
-      "Placeholder policy — replace with your official written procedure.",
+      "For your child's safety, 3 Tiny Steps will only release children to authorized individuals listed on the Emergency Form. If someone not listed will be picking up your child, the parent must provide written authorization or, in an emergency, call the daycare with the person's name and driver's license number. All pick-up individuals must present a valid photo ID and sign the sign-in/out sheet.",
+      "**Please refer to the Parent Handbook for additional information.**",
     ],
   },
   {
     question: "Do I need to provide meals and snacks?",
     answer: [
-      "Placeholder answer — let us know your actual meal policy (e.g. meals/snacks provided by the daycare, or packed by parents) and we'll update this.",
+      "Good nutrition is vital to a child's health and growth. 3 Tiny Steps Home Daycare supports this by __providing nutritious snacks, fruits, and vegetables__. It is REQUIRED parents provide lunch for their child. For those children who are formula/breast milk, parents are asked to provide formula or breast milk. Families supply baby food as well. If your child has any allergies, please let our staff know and include them on the enrollment forms.",
     ],
   },
   {
     question: "How will I receive updates about my child's day?",
     answer: [
-      "You'll receive updates on meals, naps, diapering, and daily activities — let us know which app or method you use (e.g. a daily report app, photos, or a notebook) so we can describe it accurately here.",
+      "We're happy to keep you connected throughout your child's day! Parents can reach us by **phone call or message** for regular updates, or if their child is feeling unwell or has an injury. You're also always welcome to check in or stop by during the day to see your little one.",
     ],
   },
 ];
