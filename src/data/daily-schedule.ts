@@ -19,7 +19,6 @@ export interface ScheduleBlock {
   subtitle: string;
   description: string;
   accent: AccentColor;
-  /** Nested/indented entry under the previous block, like Infant Nap Time. */
   nested?: boolean;
 }
 

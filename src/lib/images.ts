@@ -10,7 +10,6 @@ import path from "node:path";
  * place later is the only step needed to make it appear.
  *
  * Every page here is statically rendered, so this runs at build time.
- * Import it only from server components.
  */
 const IMAGES_DIR = path.join(process.cwd(), "public", "images");
 

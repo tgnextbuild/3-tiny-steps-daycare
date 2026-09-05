@@ -438,7 +438,7 @@ export function ContactFormSection() {
     const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
     if (!accessKey) {
       console.error(
-        "Contact form: NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set — see .env.local.example.",
+        "Contact form: NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set — see README.md's Environment variables section.",
       );
       setSubmitError(GENERIC_SUBMIT_ERROR);
       return;

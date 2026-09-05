@@ -16,7 +16,6 @@ export function Header({ searchIndex }: { searchIndex: SearchEntry[] }) {
   const menuRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Close the mobile menu on route change.
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
