@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FAQSection } from "@/components/parent-resources/FAQSection";
 import { FinancialResources } from "@/components/parent-resources/FinancialResources";
 import { ResourceCardGrid } from "@/components/parent-resources/ResourceCardGrid";
+import { SparklerHighlight } from "@/components/parent-resources/SparklerHighlight";
 import { Testimonials } from "@/components/parent-resources/Testimonials";
 import {
   downloadableForms,
@@ -49,18 +50,24 @@ export default function ParentResourcesPage() {
         </Container>
       </section>
 
+      <section className="py-10 sm:py-14">
+        <Container>
+          <FinancialResources />
+        </Container>
+      </section>
+
+      <section className="pb-10 sm:pb-14">
+        <Container>
+          <SparklerHighlight />
+        </Container>
+      </section>
+
       <section className="py-6">
         <Container>
           <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
             <FAQSection />
             <Testimonials />
           </div>
-        </Container>
-      </section>
-
-      <section className="py-10 sm:py-14">
-        <Container>
-          <FinancialResources />
         </Container>
       </section>
 

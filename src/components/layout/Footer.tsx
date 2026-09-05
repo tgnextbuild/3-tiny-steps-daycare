@@ -64,10 +64,15 @@ export function Footer() {
       </div>
 
       <div className="border-t border-ink/10 py-5">
-        <p className="mx-auto w-full max-w-6xl px-5 text-center text-body text-ink/55 sm:px-8 sm:text-left">
-          &copy; {new Date().getFullYear()} {siteConfig.name}. All rights
-          reserved.
-        </p>
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-5 text-center sm:flex-row sm:justify-between sm:px-8 sm:text-left">
+          <p className="text-body text-ink/55">
+            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights
+            reserved.
+          </p>
+          <Link href="/privacy-policy" className="text-body text-ink/55 hover:text-ink">
+            Privacy Policy
+          </Link>
+        </div>
       </div>
     </footer>
   );

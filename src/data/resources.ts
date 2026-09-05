@@ -2,9 +2,9 @@ import type { IconName } from "@/components/ui/Icon";
 import type { AccentColor, Photo } from "@/types/content";
 
 /* ------------------------------------------------------------------ *
- * PARENT RESOURCES page — hero, quick resources, downloadable forms, and
- * the Care4Kids panel. FAQs and testimonials live in `faqs.ts` and
- * `testimonials.ts`.
+ * PARENT RESOURCES page — hero, quick resources, downloadable forms, the
+ * Care4Kids panel, and the Sparkler highlight. FAQs and testimonials live
+ * in `faqs.ts` and `testimonials.ts`.
  *
  * HOW TO ADD OR UPDATE A RESOURCE / FORM
  * 1. Save the PDF into the `public/documents/` folder.
@@ -101,4 +101,57 @@ export const financialResources = {
   points: ["Easy to Apply", "Many programs accepted", "Supporting working families"],
   ctaLabel: "Learn More",
   image: { filename: "care4kids-family.jpg", label: "Children's colorful shoes on a play mat" } as Photo,
+};
+
+export interface SparklerDevelopmentArea {
+  icon: IconName;
+  accent: AccentColor;
+  title: string;
+  body: string;
+}
+
+export const sparklerHighlight = {
+  badge: "New!",
+  heading: "Supporting Your Child's Development with Sparkler",
+  intro:
+    "We're excited to offer families access to Sparkler, a free resource available through the Connecticut Office of Early Childhood for families with children.",
+  body: "Sparkler helps parents and caregivers learn more about their child's development through Ages & Stages Questionnaires (ASQ), age appropriate activities, development information, and helpful family resources.",
+  noteHeading: "Participation is completely optional",
+  noteBody:
+    "Choosing to participate does not impact your child's enrollment or care at 3 Tiny Steps Daycare.",
+  ctaLabel: "Learn More About Sparkler",
+  ctaUrl: "https://playsparkler.org/connecticut/",
+  asqHeading: "How does the ASQ help with your child's development?",
+  areas: [
+    {
+      icon: "chat",
+      accent: "crimson",
+      title: "Communication",
+      body: "How your child communicates through sounds, words, gestures, and interaction.",
+    },
+    {
+      icon: "activity",
+      accent: "yellow",
+      title: "Gross Motor Skills",
+      body: "How your child uses their large muscles to sit, crawl, run, jump, and more.",
+    },
+    {
+      icon: "hand",
+      accent: "azure",
+      title: "Fine Motor Skills",
+      body: "How your child uses their hands and fingers for tasks like grasping, drawing, and manipulating objects.",
+    },
+    {
+      icon: "lightbulb",
+      accent: "green",
+      title: "Problem Solving",
+      body: "How your child explores, learns, remembers, and figures things out.",
+    },
+    {
+      icon: "people",
+      accent: "pastelAzure",
+      title: "Personal-Social Development",
+      body: "How your child interacts with others and develops independence.",
+    },
+  ] as SparklerDevelopmentArea[],
 };

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Photo } from "@/components/ui/Photo";
-import { currentPost } from "@/data/blog";
+import { currentPost } from "@/data/blog-posts";
 import { monthlyRecap } from "@/data/home";
 
 /** Always shows the newest recap's photo — see the comment on `monthlyRecap` in home.ts. */

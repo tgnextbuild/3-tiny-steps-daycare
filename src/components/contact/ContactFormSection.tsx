@@ -5,7 +5,7 @@ import { ContactDetailsList } from "@/components/contact/ContactDetailsList";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { contactDetails } from "@/data/contact";
+import { businessPhone } from "@/data/contact";
 
 /**
  * Today's date as "YYYY-MM-DD", in the visitor's local timezone — matches
@@ -66,6 +66,17 @@ function handlePhoneInput(e: FormEvent<HTMLInputElement>) {
     newCaretPos = 0;
   }
   input.setSelectionRange(newCaretPos, newCaretPos);
+}
+
+/**
+ * Grabs a form field by id, scoped to actual form controls. Plain
+ * `document.getElementById` isn't safe on this page: `ContactDetailsList`
+ * reuses ids like "email" for its own deep-linkable list items (see its
+ * comment), so `getElementById("email")` can return that `<li>` instead of
+ * the input — this scopes the match to an `<input>`/`<textarea>` only.
+ */
+function getFormControl(id: string): HTMLInputElement | HTMLTextAreaElement | null {
+  return document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`input#${id}, textarea#${id}`);
 }
 
 const REQUIRED_FIELDS = [
@@ -130,6 +141,62 @@ const EMAIL_FIELD_LABELS: Record<FieldName, string> = {
   message: "Message",
 };
 
+// Requires a real-looking domain: at least one "label.label" dot, no
+// consecutive dots, nothing starting/ending a label with a dot, and a final
+// segment of 2+ letters (so "user@host", "user@a..b.com", and "user@a.c"
+// all fail, where the old, more permissive pattern let them through).
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)*\.[a-zA-Z]{2,}$/;
+
+// The handful of TLDs a small CT daycare's families are realistically
+// using — not an exhaustive list of every real TLD. Used only to catch
+// near-miss typos of *these*, not to reject legitimate-but-uncommon ones.
+const COMMON_TLDS = ["com", "net", "org", "edu", "gov", "co", "io", "us", "info", "biz", "me"];
+
+/** Classic edit-distance DP — how many single-character edits turn `a` into `b`. */
+function levenshteinDistance(a: string, b: string): number {
+  const dist: number[][] = Array.from({ length: a.length + 1 }, () => new Array<number>(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) dist[i][0] = i;
+  for (let j = 0; j <= b.length; j++) dist[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dist[i][j] = Math.min(dist[i - 1][j] + 1, dist[i][j - 1] + 1, dist[i - 1][j - 1] + cost);
+    }
+  }
+  return dist[a.length][b.length];
+}
+
+/**
+ * Catches things like "abc@abc.clm" (meant ".com") — if the typed TLD is
+ * one letter off from a common one, suggest that instead of silently
+ * accepting a domain ending that almost certainly doesn't exist.
+ */
+function findTldTypo(email: string): string | undefined {
+  const tld = email.slice(email.lastIndexOf(".") + 1).toLowerCase();
+  if (COMMON_TLDS.includes(tld)) return undefined;
+  return COMMON_TLDS.find((known) => levenshteinDistance(tld, known) === 1);
+}
+
+/** True for "0000000000"-style numbers — every digit the same. */
+function isRepeatedDigit(digits: string): boolean {
+  return /^(\d)\1{9}$/.test(digits);
+}
+
+/**
+ * True for a run like "1234567890" or "9876543210" — each digit exactly one
+ * more (or one less) than the last, wrapping 9→0, in either direction.
+ */
+function isSequentialDigits(digits: string): boolean {
+  let ascending = true;
+  let descending = true;
+  for (let i = 1; i < digits.length; i++) {
+    const step = (Number(digits[i]) - Number(digits[i - 1]) + 10) % 10;
+    if (step !== 1) ascending = false;
+    if (step !== 9) descending = false;
+  }
+  return ascending || descending;
+}
+
 /**
  * The one place every validation rule lives, so the "check on blur" and
  * "check on submit" paths can never drift out of sync with each other.
@@ -145,8 +212,22 @@ function validateField(field: FieldName, rawValue: string): string | undefined {
     if (digits.length > 0 && digits.length < 10) {
       return "Enter a complete 10-digit phone number.";
     }
+    if (digits.length === 10) {
+      // Real US area codes and exchange codes never start with 0 or 1.
+      if (["0", "1"].includes(digits[0]) || ["0", "1"].includes(digits[3])) {
+        return "Enter a valid US phone number.";
+      }
+      if (isRepeatedDigit(digits) || isSequentialDigits(digits)) {
+        return "Enter a valid US phone number.";
+      }
+    }
   }
-  if (field === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+  // A TLD-typo guess (`abc.clm` → suggest `.com`) is deliberately *not*
+  // checked here — it's a heuristic that can be wrong (a real ".in"
+  // address is one letter from ".io"), so it surfaces as a dismissible,
+  // non-blocking hint instead of stopping submission. See `findTldTypo`
+  // and the suggestion state in `ContactFormSection`.
+  if (field === "email" && value && !EMAIL_PATTERN.test(value)) {
     return "Enter a valid email address.";
   }
   if (field === "startDate" && value && value < getTodayDateString()) {
@@ -229,9 +310,6 @@ function Field({
   );
 }
 
-// Reused in the success message's "call us directly" fallback line.
-const businessPhone = contactDetails.find((detail) => detail.icon === "phone")?.lines[0] ?? "";
-
 // Shown to every visitor on any failure, regardless of cause — the actual
 // reason (missing access key, Web3Forms error, network failure) only goes
 // to the browser console, so a technical detail never surfaces on-screen.
@@ -246,6 +324,9 @@ export function ContactFormSection() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formKey, setFormKey] = useState(0);
+  // The TLD-typo hint ("did you mean .com?") — separate from `errors`
+  // because it's a guess, not a hard failure, so it never blocks Submit.
+  const [emailTldSuggestion, setEmailTldSuggestion] = useState<string | undefined>(undefined);
   const successRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   // Left unset until mount so the site's static build date never gets baked
@@ -305,6 +386,33 @@ export function ContactFormSection() {
     });
   };
 
+  // Email gets its own blur/focus pair layered on top of the generic ones
+  // above — same hard-error check, plus the non-blocking TLD-typo hint
+  // (only worth showing when the address is otherwise well-formed).
+  const handleEmailBlur = (value: string) => {
+    handleFieldBlur("email")(value);
+    const trimmed = value.trim();
+    setEmailTldSuggestion(
+      trimmed && !validateField("email", value) ? findTldTypo(trimmed) : undefined,
+    );
+  };
+
+  const handleEmailFocus = () => {
+    handleFieldFocus("email")();
+    setEmailTldSuggestion(undefined);
+  };
+
+  // Rewrites just the TLD in place (e.g. "abc@abc.clm" → "abc@abc.com")
+  // and puts focus back so the parent can keep typing or hit Submit.
+  const applyEmailTldSuggestion = () => {
+    const input = getFormControl("email");
+    if (!input || !emailTldSuggestion) return;
+    const lastDot = input.value.lastIndexOf(".");
+    if (lastDot !== -1) input.value = `${input.value.slice(0, lastDot)}.${emailTldSuggestion}`;
+    setEmailTldSuggestion(undefined);
+    input.focus();
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -321,7 +429,7 @@ export function ContactFormSection() {
       // renders somewhere the user never sees, and nothing appears to
       // happen when they tap Submit.
       const firstInvalidField = FIELD_ORDER.find((field) => nextErrors[field]);
-      const el = firstInvalidField ? document.getElementById(firstInvalidField) : null;
+      const el = firstInvalidField ? getFormControl(firstInvalidField) : null;
       el?.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => el?.focus(), 300);
       return;
@@ -449,15 +557,30 @@ export function ContactFormSection() {
                       required
                       error={errors.phone}
                     />
-                    <Field
-                      name="email"
-                      label="Email"
-                      type="email"
-                      required
-                      error={errors.email}
-                      onFocus={handleFieldFocus("email")}
-                      onBlur={handleFieldBlur("email")}
-                    />
+                    <div>
+                      <Field
+                        name="email"
+                        label="Email"
+                        type="email"
+                        required
+                        error={errors.email}
+                        onFocus={handleEmailFocus}
+                        onBlur={handleEmailBlur}
+                      />
+                      {emailTldSuggestion && !errors.email && (
+                        <p className="mt-1 pl-1 text-[13px] text-amber-700">
+                          Did you mean{" "}
+                          <button
+                            type="button"
+                            onClick={applyEmailTldSuggestion}
+                            className="font-medium underline underline-offset-2"
+                          >
+                            .{emailTldSuggestion}
+                          </button>
+                          ?
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <p className="mt-4 font-heading text-button text-ink/70 uppercase">

@@ -20,11 +20,15 @@ export function ProgramCards() {
               </div>
               <h3 className="font-heading text-h3 text-ink">{program.name}</h3>
               <p className="text-body font-medium text-azure">{program.ageRange}</p>
-              <p className="text-body text-ink/70">{program.description}</p>
+              {/* `min-h-[3lh]` reserves space for up to 3 lines regardless of
+                  how long a given program's description text is, so the
+                  bullet list below always starts at the same height across
+                  all three cards instead of shifting with word wrap. */}
+              <p className="min-h-[3lh] text-body text-ink/70">{program.description}</p>
               <ul className="mt-1 flex w-full flex-col gap-1.5 text-left">
                 {program.bullets.map((bullet) => (
-                  <li key={bullet} className="flex items-start gap-2 text-body text-ink/80">
-                    <Icon name="heart" className="mt-0.5 size-3.5 shrink-0 text-azure" />
+                  <li key={bullet} className="flex items-center gap-2 text-body text-ink/80">
+                    <Icon name="heart" className="size-3.5 shrink-0 text-azure" />
                     {bullet}
                   </li>
                 ))}

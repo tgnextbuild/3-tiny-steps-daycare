@@ -6,6 +6,13 @@ the site, and each file starts with instructions for that part.
 
 **You do not need to touch any other folder to update the site's content.**
 
+**Exception: Blog Recaps and Gallery Photos are edited at `/admin`, not
+here.** Go to your site's URL followed by `/admin` (e.g.
+`https://yoursite.com/admin`), log in, and you'll see two sections there —
+"Blog Recaps" and "Gallery Photos" — with forms instead of code. See "How
+photos and recaps fit together" below for how those two connect. Everything
+else in this table is still a plain file you edit directly.
+
 ## Which file do I edit?
 
 | I want to change...                      | Edit this file       |
@@ -20,9 +27,10 @@ the site, and each file starts with instructions for that part.
 | **Forms and downloadable resources**     | `resources.ts`       |
 | Frequently asked questions               | `faqs.ts`            |
 | Parent reviews                           | `testimonials.ts`    |
-| **Every photo on the Blog or Gallery page** | `gallery.ts`  |
-| **Monthly recap write-ups (the Blog page)** | `blog.ts`     |
+| **Every photo on the Blog or Gallery page** | `/admin` (Gallery Photos) |
+| **Monthly recap write-ups (the Blog page)** | `/admin` (Blog Recaps) |
 | Phone, hours, email, address             | `contact.ts`         |
+| **The Privacy Policy page**              | `legal.ts`            |
 
 ## The three rules
 
@@ -57,9 +65,9 @@ the photo into `public/images/` and use its exact file name:
 photo: { filename: "staff-ms-anna.jpg", label: "Photo of Ms. Anna" },
 ```
 
-Blog and Gallery photos are the one exception — those go in
-`public/images/gallery/` and are added through `gallery.ts` (see "How photos
-and recaps fit together" above), not written directly into another file.
+Blog and Gallery photos are the one exception — those are uploaded through
+`/admin` (see "How photos and recaps fit together" below), not saved into a
+folder by hand.
 
 `label` is the description read aloud by screen readers and shown if the photo
 can't load, so keep it short and accurate.
@@ -76,37 +84,38 @@ overwrite the PDF using the same file name — no code change needed.
 
 ## How photos and recaps fit together
 
-**Every photo lives in `gallery.ts` — that's the one file where a photo's
-file, caption, and date are defined, whether it belongs to a recap or not.**
-Save the photo into `public/images/gallery/`, then add a line to
-`galleryPhotos` in `gallery.ts`. Full instructions are at the top of that
-file.
+Both live at `/admin`, as two separate sections — **Gallery Photos** and
+**Blog Recaps** — and the order matters:
 
-- **Just want a photo in the Gallery, no recap attached?** You're done —
-  nothing to add anywhere else.
-- **Want it in a monthly recap too?** Add the recap in `blog.ts` (copy the
-  first block, paste it above, edit it) and set its `image`/`gallery` fields
-  to the filenames you just added in `gallery.ts` — full instructions are at
-  the top of `blog.ts`.
+1. **Add the photo in Gallery Photos first.** Upload it, write a caption,
+   and (optionally) set a month — that's what controls its sort order on
+   the Gallery page.
+2. **Then, if it belongs in a monthly recap too**, create or edit that
+   recap in Blog Recaps and pick the photo from a dropdown for its cover
+   photo and/or its gallery strip. You can only pick photos that already
+   exist in Gallery Photos — that's why step 1 comes first.
+
+- **Just want a photo in the Gallery, no recap attached?** You're done after
+  step 1 — nothing else to do.
+- **Want it in a monthly recap too?** Do step 2.
 
 While a recap is recent it shows in THREE places — as the featured recap and
 one of the 3 "Looking Back" cards on the Blog page, and as the big photo
-banner on the Home page — no matter how many recap blocks pile up in
-`blog.ts` over time, so you never need to delete old ones. Posting a new
-recap automatically updates all three; there's nothing to change on the
-Home page itself.
+banner on the Home page — no matter how many recaps pile up over time, so you
+never need to delete old ones. Posting a new recap automatically updates all
+three; there's nothing to change on the Home page itself.
 
-**Deleting a recap block in `blog.ts` only removes its write-up — never its
-photos.** The photos live in `gallery.ts` and keep showing in the Gallery
-regardless of what happens in `blog.ts`. To actually remove a photo, delete
-it from `gallery.ts` — and if a recap still references that filename, clear
-that reference out of `blog.ts` too (nothing breaks if you forget — it just
-shows a placeholder where that photo used to be).
+**Deleting a recap in Blog Recaps only removes its write-up — never its
+photos.** The photos live in Gallery Photos and keep showing in the Gallery
+regardless of what happens to the recap. To actually remove a photo, delete
+it from Gallery Photos — and if a recap still uses it, that recap will just
+show a placeholder where the photo used to be (nothing breaks).
 
 ## Colors
 
-`blog.ts` is the one exception — recap panel colors are picked automatically,
-in rotation, so there's nothing to set there. Everywhere else, where a file
+Blog Recaps are the one exception — recap panel colors are picked
+automatically, in rotation, so there's no color to set there. Everywhere
+else, where a file
 asks for an `accent`, use one of these exact words:
 
 `"green"` · `"crimson"` (pink) · `"azure"` (blue) · `"pastelAzure"` (light

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3 Tiny Steps Daycare — Content Manager</title>
+    <!-- Keeps this admin page out of search results; it's not a real site page. -->
+    <meta name="robots" content="noindex" />
+    <!--
+      Without this, Decap's relative fetch of "config.yml" breaks
+      specifically when this page is reached via the next.config.ts
+      rewrite at the trailing-slash-less "/admin" (as opposed to this
+      file's own real path, "/admin/index.html") — the browser resolves a
+      relative URL against "/" instead of "/admin/" when the current URL
+      has no trailing slash, so it requests "/config.yml" (404) instead of
+      "/admin/config.yml". Pinning the base here makes it resolve
+      correctly regardless of which of the two URLs was used to get here.
+    -->
+    <base href="/admin/" />
+  </head>
+  <body>
+    <!--
+      Decap CMS itself — loaded from its CDN rather than bundled into the
+      site's own build, same "no unnecessary dependency in the main app"
+      reasoning as everything else in this codebase. It reads
+      /admin/config.yml (this file's sibling) automatically.
+
+      Pinned to 3.8.3+ — DecapBridge's PKCE auth requires it.
+    -->
+    <script src="https://unpkg.com/decap-cms@^3.8.3/dist/decap-cms.js"></script>
+  </body>
+</html>

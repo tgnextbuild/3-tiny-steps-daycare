@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { quickAccessCards } from "@/data/home";
-import { accentClasses } from "@/lib/accent";
+import { accentClasses, cardHoverLiftClasses } from "@/lib/accent";
 
 export function QuickAccessCards() {
   return (
@@ -11,7 +11,7 @@ export function QuickAccessCards() {
         <ul className="grid gap-5 sm:grid-cols-3">
           {quickAccessCards.map((card) => {
             const colors = accentClasses[card.accent];
-            const cardClasses = `group flex h-full items-start gap-4 rounded-[2rem] ${colors.bgTint} p-6 transition-transform duration-150 hover:-translate-y-1 hover:shadow-[0_14px_30px_-16px_rgba(43,36,32,0.35)]`;
+            const cardClasses = `group flex h-full items-start gap-4 rounded-[2rem] ${colors.bgTint} p-6 ${cardHoverLiftClasses}`;
 
             const inner = (
               <>

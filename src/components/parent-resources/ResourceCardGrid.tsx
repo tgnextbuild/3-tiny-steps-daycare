@@ -5,9 +5,9 @@ import { Icon } from "@/components/ui/Icon";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import type { ResourceCard } from "@/data/resources";
-import { accentClasses } from "@/lib/accent";
+import { accentClasses, cardHoverLiftClasses } from "@/lib/accent";
 import { slugify } from "@/lib/slugify";
-import { useOpenFromQuery } from "@/lib/useOpenFromQuery";
+import { scrollToId, useOpenTargetIndex } from "@/lib/useOpenFromQuery";
 
 export function ResourceCardGrid({
   cards,
@@ -18,21 +18,15 @@ export function ResourceCardGrid({
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const active = openIndex !== null ? cards[openIndex] : null;
-  const openTarget = useOpenFromQuery();
+  const targetIndex = useOpenTargetIndex(cards, (card) => `resource-${slugify(card.title)}`);
 
   // Arriving from a search result (?open=resource-...) auto-opens that
   // resource's modal and scrolls its card into view.
   useEffect(() => {
-    if (!openTarget) return;
-    const index = cards.findIndex((card) => `resource-${slugify(card.title)}` === openTarget);
-    if (index === -1) return;
-    setOpenIndex(index);
-    requestAnimationFrame(() => {
-      document
-        .getElementById(`resource-${slugify(cards[index].title)}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  }, [openTarget, cards]);
+    if (targetIndex === -1) return;
+    setOpenIndex(targetIndex);
+    scrollToId(`resource-${slugify(cards[targetIndex].title)}`);
+  }, [targetIndex, cards]);
 
   return (
     <>
@@ -47,7 +41,7 @@ export function ResourceCardGrid({
                 type="button"
                 id={`resource-${slugify(card.title)}`}
                 onClick={() => setOpenIndex(i)}
-                className={`group flex h-full w-full flex-col items-start gap-3 rounded-[2rem] ${colors.bgTint} p-6 text-left transition-transform duration-150 hover:-translate-y-1 hover:shadow-[0_14px_30px_-16px_rgba(43,36,32,0.35)]`}
+                className={`group flex h-full w-full flex-col items-start gap-3 rounded-[2rem] ${colors.bgTint} p-6 text-left ${cardHoverLiftClasses}`}
               >
                 <Icon name={card.icon} className={`size-8 ${colors.text}`} strokeWidth={1.6} />
                 <h3 className="font-heading text-h3 tracking-wide text-ink uppercase">

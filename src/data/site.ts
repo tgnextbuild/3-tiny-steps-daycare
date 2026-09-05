@@ -12,6 +12,15 @@ export const siteConfig = {
   location: "Norwalk, CT",
 };
 
+/**
+ * The production URL, with no trailing slash — used anywhere an absolute
+ * URL is required (robots.txt, sitemap.xml, and eventually Open Graph
+ * tags). This is currently the Vercel-issued domain; update this ONE line
+ * once a custom domain is live, and robots.txt/sitemap.xml pick it up
+ * automatically.
+ */
+export const siteUrl = "https://3-tiny-steps-daycare.vercel.app";
+
 /* ------------------------------------------------------------------ *
  * NAVIGATION — the links in the top menu, in order.
  * ------------------------------------------------------------------ */

@@ -1,11 +1,11 @@
 import { coreValues, facility, mission } from "@/data/about";
-import { currentPost, previousPosts } from "@/data/blog";
+import { currentPost, previousPosts } from "@/data/blog-posts";
 import { contactDetails, parking } from "@/data/contact";
 import { dailyScheduleHeading } from "@/data/daily-schedule";
 import { safety, timelineHeading, whyChooseHeading } from "@/data/home";
 import { curriculum, programs } from "@/data/programs";
 import { provider } from "@/data/provider";
-import { downloadableForms, financialResources, quickResources } from "@/data/resources";
+import { downloadableForms, financialResources, quickResources, sparklerHighlight } from "@/data/resources";
 import { faqItems } from "@/data/faqs";
 import { staffMembers } from "@/data/staff";
 import { slugify } from "@/lib/slugify";
@@ -113,6 +113,20 @@ export const searchIndex: SearchEntry[] = [
     keywords: `${financialResources.intro} ${financialResources.body} Care4Kids`,
     url: "/parent-resources#financial-resources",
   },
+  {
+    title: sparklerHighlight.heading,
+    section: "Parent Resources",
+    keywords: `Sparkler ${sparklerHighlight.intro} ${sparklerHighlight.body} ASQ Ages and Stages Questionnaire`,
+    url: "/parent-resources#sparkler",
+  },
+  ...sparklerHighlight.areas.map(
+    (area): SearchEntry => ({
+      title: area.title,
+      section: "Sparkler",
+      keywords: area.body,
+      url: "/parent-resources#sparkler",
+    }),
+  ),
 
   // ---- Blog ----
   ...(currentPost

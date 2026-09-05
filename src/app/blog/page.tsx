@@ -8,7 +8,8 @@ import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { blogHero, currentPost, lookingBack, previousPosts } from "@/data/blog";
+import { blogHero, lookingBack } from "@/data/blog";
+import { currentPost, previousPosts } from "@/data/blog-posts";
 
 export const metadata: Metadata = {
   title: "Blog",

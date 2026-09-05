@@ -1,6 +1,6 @@
 import { MonthRibbon } from "./MonthRibbon";
 import { Photo } from "@/components/ui/Photo";
-import type { AccentedBlogPost } from "@/data/blog";
+import type { AccentedBlogPost } from "@/data/blog-posts";
 import { accentClasses } from "@/lib/accent";
 
 /** The featured recap panel at the top of the Blog page. */

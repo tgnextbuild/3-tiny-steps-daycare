@@ -1,3 +1,5 @@
+import { readContentCollection } from "@/lib/content";
+import { normalizeImagePath } from "@/lib/images";
 import type { Photo } from "@/types/content";
 
 /* ==================================================================== *
@@ -8,28 +10,19 @@ import type { Photo } from "@/types/content";
  * specific month's recap or is just a general daycare photo. The Gallery
  * page shows every photo below in one grid, newest first.
  *
- * HOW TO ADD A PHOTO
- * 1. Save it into `public/images/gallery/`.
- * 2. Add a line to the `galleryPhotos` list below:
- *      { filename: "gallery/my-photo.jpg", label: "Short description", date: "2026-08" },
- *    `date` is just year-month (no day needed) — it controls the sort
- *    order on the Gallery page, newest first. Leave it off and the photo
- *    just sorts to the end instead.
- *
- * HOW TO REMOVE A PHOTO
- * Delete its line — AND, IMPORTANT: if a recap in `blog.ts` references
- * that same filename (in its `image` or `gallery` field), remove that
- * reference too. Nothing will break if you forget — the recap just shows
- * a placeholder where that photo used to be — but the reference will sit
- * there looking broken until it's cleaned up, so don't skip this step.
+ * Photos are managed at `/admin` (Decap CMS), not by hand-editing this
+ * file — each photo is one Markdown file under `content/gallery/`, and
+ * `/admin` handles uploading the image itself into `public/images/gallery/`
+ * for you. This file just reads whatever's in `content/gallery/` at build
+ * time; there's nothing here to edit directly anymore.
  *
  * USING A PHOTO IN A RECAP
- * `blog.ts` doesn't hold photo details itself — a recap just names which
- * photo(s) from THIS list it wants, by filename. So the two-step workflow
- * for a recap photo is: add it here first, then reference its filename in
- * the recap block in `blog.ts`. This is why deleting an old recap in
- * `blog.ts` never deletes its photos — they belong to this file, and the
- * recap was only ever pointing at them.
+ * A Blog Recap in `/admin` names which gallery photo(s) it wants by
+ * filename — so the workflow for a recap photo is still: add it to the
+ * Gallery collection first, then reference its filename from the recap.
+ * This is why deleting a recap's write-up never deletes its photos — they
+ * belong to the Gallery collection, and the recap was only ever pointing
+ * at them (see `findGalleryPhoto` below, and `blog-posts.ts`).
  *
  * `label` is shown as a caption under the photo when it's opened full-size,
  * and is also read aloud by screen readers — so keep it short and accurate.
@@ -44,78 +37,34 @@ export const galleryHero = {
   } as Photo,
 };
 
+/**
+ * Must be kept in sync BY HAND with the "gallery" collection's `fields:`
+ * list in `public/admin/config.yml` — see the same note on `BlogPostFile`
+ * in `blog-posts.ts` for why a mismatch here fails silently instead of at
+ * build time.
+ */
 export interface GalleryPhoto extends Photo {
   /** Year-month, e.g. "2026-07". Controls sort order (newest first). Optional — undated photos sort last. */
   date?: string;
 }
 
-export const galleryPhotos: GalleryPhoto[] = [
-  // ---- July 2026 recap ----
-  {
-    filename: "gallery/recap-july-2026.jpg",
-    label: "Classroom decorated with jerseys and flags for the World Cup Final",
-    date: "2026-07",
-  },
-  {
-    filename: "gallery/recap-july-2026-1.jpg",
-    label: "Children painting at the craft table",
-    date: "2026-07",
-  },
-  {
-    filename: "gallery/recap-july-2026-2.jpg",
-    label: "World Cup decorations in the classroom",
-    date: "2026-07",
-  },
-  { filename: "gallery/recap-july-2026-3.jpg", label: "Outdoor water play", date: "2026-07" },
-  {
-    filename: "gallery/recap-july-2026-4.jpg",
-    label: "Storytime on the reading rug",
-    date: "2026-07",
-  },
-  {
-    filename: "gallery/recap-july-2026-5.jpg",
-    label: "Building blocks together",
-    date: "2026-07",
-  },
-
-  // ---- Add next month's recap photos here ----
-  // Copy the block below, uncomment it, and change the filenames, labels,
-  // and date. Group each month together under its own heading like the
-  // July block above, newest month first.
-  //
-  // // ---- August 2026 recap ----
-  // {
-  //   filename: "gallery/recap-august-2026.jpg",
-  //   label: "Short description of the photo",
-  //   date: "2026-08",
-  // },
-
-  // ---- General daycare photos (not tied to a specific month) ----
-  { filename: "day-gallery-1.jpg", label: "\"Amazing things happen here\" classroom wall" },
-  { filename: "day-gallery-2.jpg", label: "Math learning wall with shapes and numbers" },
-  { filename: "day-gallery-3.jpg", label: "Science wall with toy dinosaurs" },
-  { filename: "facility-classroom.jpg", label: "Our main classroom and play area" },
-  { filename: "hero-classroom.jpg", label: "A teacher leading a lesson at the classroom easel" },
-  { filename: "mission-outdoor-play.jpg", label: "Our outdoor play area" },
-  { filename: "program-infants.jpg", label: "Infant reaching for a toy" },
-  { filename: "program-toddlers.jpg", label: "Toddler exploring outdoors with a caregiver" },
-  { filename: "program-preschoolers.jpg", label: "Preschoolers practicing writing" },
-  { filename: "programs-hero.jpg", label: "Teacher working with children at a table" },
-  { filename: "parent-resources-hero.jpg", label: "Outdoor playground slide" },
-  { filename: "contact-hero.jpg", label: "Shelf of toys in the classroom" },
-];
+export const galleryPhotos: GalleryPhoto[] = readContentCollection<GalleryPhoto>(
+  "content/gallery",
+).map((photo) => ({ ...photo, filename: normalizeImagePath(photo.filename) }));
 
 /**
- * Looks up a photo by filename for `blog.ts`'s recap references. Falls back
- * to a stub (using the filename itself as the label) instead of throwing if
- * the filename isn't in `galleryPhotos` above — e.g. a typo, or a gallery
- * entry that was deleted but a recap still references it (see the REMOVE
- * instructions above — that reference should get cleaned up in `blog.ts`,
- * but forgetting to shows a placeholder rather than failing the build).
+ * Looks up a photo by filename for `blog-posts.ts`'s recap references.
+ * Falls back to a stub (using the filename itself as the label) instead of
+ * throwing if the filename isn't in `galleryPhotos` above — e.g. a typo, or
+ * a gallery entry that was deleted but a recap still references it.
  */
 export function findGalleryPhoto(filename: string): Photo {
+  const normalized = normalizeImagePath(filename);
   return (
-    galleryPhotos.find((photo) => photo.filename === filename) ?? { filename, label: filename }
+    galleryPhotos.find((photo) => photo.filename === normalized) ?? {
+      filename: normalized,
+      label: normalized,
+    }
   );
 }
 

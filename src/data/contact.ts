@@ -64,6 +64,18 @@ export const contactDetails: ContactDetail[] = [
   },
 ];
 
+/**
+ * The phone number and email, pulled out of `contactDetails` once here
+ * instead of each caller re-finding them by matching on `icon` — that
+ * matching was duplicated in `ContactFormSection.tsx` and the Privacy
+ * Policy page, and relied on the undocumented convention that "the entry
+ * with the phone icon is the phone number." Both are used as the "call us
+ * directly" fallback wherever forms/errors need a real contact method.
+ */
+export const businessPhone = contactDetails.find((detail) => detail.icon === "phone")?.lines[0] ?? "";
+export const businessEmail =
+  contactDetails.find((detail) => detail.icon === "envelope")?.lines[0] ?? "";
+
 export const parking = {
   heading: "Easy Parking",
   body: "Safe parking is available in front of our daycare.",

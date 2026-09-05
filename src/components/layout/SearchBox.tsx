@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
-import { searchIndex } from "@/data/search-index";
+import type { SearchEntry } from "@/lib/search";
 import { searchEntries } from "@/lib/search";
 import { useClickOutside } from "@/lib/useClickOutside";
 
@@ -13,11 +13,19 @@ import { useClickOutside } from "@/lib/useClickOutside";
  * point at an in-page anchor or a `?open=` link that auto-expands an
  * accordion/modal on load, and a real navigation is what makes both of
  * those work reliably whether or not you're already on that page.
+ *
+ * `searchIndex` is passed in as a prop rather than imported directly —
+ * `@/data/search-index` transitively reads Markdown files from disk (for
+ * the Blog/Gallery entries), which only works in server-side code. It's
+ * built once in the server-rendered root layout and threaded down through
+ * `Header` (also a client component) as a plain prop instead.
  */
 export function SearchBox({
+  searchIndex,
   className = "",
   dropdownClassName = "right-0 left-0",
 }: {
+  searchIndex: SearchEntry[];
   className?: string;
   /** Positions/sizes the results dropdown. Defaults to matching the input's own width — pass a wider fixed width for a compact input (e.g. the desktop nav) so long suggestions have room to read. */
   dropdownClassName?: string;
@@ -28,7 +36,7 @@ export function SearchBox({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listId = useId();
 
-  const results = useMemo(() => searchEntries(searchIndex, query), [query]);
+  const results = useMemo(() => searchEntries(searchIndex, query), [query, searchIndex]);
 
   useEffect(() => {
     setActiveIndex(-1);

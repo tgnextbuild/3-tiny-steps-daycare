@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { faqHeading, faqItems } from "@/data/faqs";
 import { slugify } from "@/lib/slugify";
-import { useOpenFromQuery } from "@/lib/useOpenFromQuery";
+import { scrollToId, useOpenTargetIndex } from "@/lib/useOpenFromQuery";
 
 /**
  * Turns `**bold**` and `__underline__` markers in a paragraph into the
@@ -35,20 +35,15 @@ function renderFormattedText(text: string) {
 export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const idBase = useId();
-  const openTarget = useOpenFromQuery();
+  const targetIndex = useOpenTargetIndex(faqItems, (item) => `faq-${slugify(item.question)}`);
 
   // Arriving from a search result (?open=faq-...) auto-expands that
   // question and scrolls it into view.
   useEffect(() => {
-    if (!openTarget) return;
-    const index = faqItems.findIndex((item) => `faq-${slugify(item.question)}` === openTarget);
-    if (index === -1) return;
-    setOpenIndex(index);
-    const buttonId = `${idBase}-button-${index}`;
-    requestAnimationFrame(() => {
-      document.getElementById(buttonId)?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  }, [openTarget, idBase]);
+    if (targetIndex === -1) return;
+    setOpenIndex(targetIndex);
+    scrollToId(`${idBase}-button-${targetIndex}`);
+  }, [targetIndex, idBase]);
 
   return (
     <div>

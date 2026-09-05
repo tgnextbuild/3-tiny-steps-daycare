@@ -7,8 +7,8 @@ import { MonthRibbon } from "./MonthRibbon";
 import { Icon } from "@/components/ui/Icon";
 import { Modal } from "@/components/ui/Modal";
 import { lookingBack } from "@/data/blog";
-import { accentClasses } from "@/lib/accent";
-import { useOpenFromQuery } from "@/lib/useOpenFromQuery";
+import { accentClasses, cardHoverLiftClasses } from "@/lib/accent";
+import { scrollToId, useOpenTargetIndex } from "@/lib/useOpenFromQuery";
 import type { AccentColor } from "@/types/content";
 
 export interface LookingBackItem {
@@ -37,19 +37,15 @@ const TITLE_ID = "looking-back-modal-title";
 export function LookingBack({ items }: { items: LookingBackItem[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const active = items.find((item) => item.id === openId) ?? null;
-  const openTarget = useOpenFromQuery();
+  const targetIndex = useOpenTargetIndex(items, (item) => `recap-${item.id}`);
 
   // Arriving from a search result (?open=recap-...) auto-opens that
   // month's recap and scrolls its card into view.
   useEffect(() => {
-    if (!openTarget?.startsWith("recap-")) return;
-    const id = openTarget.slice("recap-".length);
-    if (!items.some((item) => item.id === id)) return;
-    setOpenId(id);
-    requestAnimationFrame(() => {
-      document.getElementById(`recap-card-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  }, [openTarget, items]);
+    if (targetIndex === -1) return;
+    setOpenId(items[targetIndex].id);
+    scrollToId(`recap-card-${items[targetIndex].id}`);
+  }, [targetIndex, items]);
 
   if (items.length === 0) return null;
 
@@ -73,7 +69,7 @@ export function LookingBack({ items }: { items: LookingBackItem[] }) {
                 id={`recap-card-${item.id}`}
                 onClick={() => setOpenId(item.id)}
                 aria-haspopup="dialog"
-                className={`group flex w-full items-center gap-4 rounded-[1.75rem] ${colors.bgTint} p-4 text-left transition-transform duration-150 hover:-translate-y-1 hover:shadow-[0_14px_30px_-16px_rgba(43,36,32,0.35)]`}
+                className={`group flex w-full items-center gap-4 rounded-[1.75rem] ${colors.bgTint} p-4 text-left ${cardHoverLiftClasses}`}
               >
                 <span className="relative size-20 shrink-0 overflow-hidden rounded-[1.25rem] bg-cream-dark sm:size-24">
                   {item.thumbnail}

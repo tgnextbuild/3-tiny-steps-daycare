@@ -1,0 +1,149 @@
+# ==================================================================== #
+# Decap CMS config — powers /admin, where the Blog Recaps and Gallery
+# Photos are edited without touching code. See src/data/README.md for
+# what this actually changes for whoever maintains the site's content.
+#
+# IMPORTANT: each collection's `fields:` list below is mirrored BY HAND in
+# a TypeScript interface — "gallery" in src/data/gallery.ts (GalleryPhoto),
+# "blog" in src/data/blog-posts.ts (BlogPostFile). There's no runtime
+# validation tying the two together, so renaming/removing a field here
+# without updating that interface (or vice versa) fails silently at build
+# time instead of erroring — update both together.
+#
+# The backend block below is DecapBridge's login/permissions layer, not
+# something to hand-edit — if it ever needs regenerating (e.g. the site's
+# URL changes), get the new snippet from the DecapBridge dashboard and
+# swap this whole block, leaving everything below it untouched.
+# ==================================================================== #
+
+# Lets /admin be tested at http://localhost:3000/admin with zero login —
+# when this is `true` AND Decap detects it's running on localhost with
+# `npx decap-server` reachable, it talks to that local proxy instead of
+# DecapBridge/GitHub, reading and writing content/ and public/images/
+# directly on disk. Harmless (and inert) once actually deployed — the
+# local backend only ever activates for a localhost visitor, so this is
+# safe to leave committed rather than toggling it on/off. See
+# src/data/README.md or ask the developer for the exact local test steps.
+local_backend: true
+
+# Use DecapBridge PKCE auth (required)
+backend:
+  name: git-gateway
+  repo: tgnextbuild/3-tiny-steps-daycare
+  branch: main
+  auth_type: pkce
+  base_url: https://auth.decapbridge.com
+  auth_endpoint: /sites/4d0bd117-58df-4ef3-9b98-e8e9a884cc89/pkce
+  auth_token_endpoint: /sites/4d0bd117-58df-4ef3-9b98-e8e9a884cc89/token
+  gateway_url: https://gateway.decapbridge.com
+
+  # See who did what (optional)
+  commit_messages:
+    create: Create {{collection}} "{{slug}}" - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} "{{slug}}" - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} "{{slug}}" - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload "{{path}}" - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete "{{path}}" - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+# Enable PKCE fields (optional, recommended)
+auth:
+  email_claim: email
+  first_name_claim: first_name
+  last_name_claim: last_name
+  avatar_url_claim: avatar_url
+
+# Better Decap + Bridge logo (optional)
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
+
+# Add site links in Decap CMS (optional)
+site_url: https://3-tiny-steps-daycare.vercel.app
+
+# ==================================================================== #
+# Where uploaded photos go. Matches this project's existing convention
+# (public/images/gallery/ is for anything Blog/Gallery related) — see
+# src/data/README.md.
+# ==================================================================== #
+media_folder: "public/images/gallery"
+public_folder: "/images/gallery"
+
+collections:
+  - name: "gallery"
+    label: "Gallery Photos"
+    label_singular: "Gallery Photo"
+    folder: "content/gallery"
+    create: true
+    delete: true
+    slug: "{{fields.label}}"
+    identifier_field: label
+    summary: "{{label}}"
+    sortable_fields: ["date", "label"]
+    editor:
+      preview: false
+    fields:
+      - label: "Photo"
+        name: "filename"
+        widget: "image"
+        hint: "Upload the photo here first — then it can be picked as a Blog Recap's cover photo or gallery photo below."
+      - label: "Caption"
+        name: "label"
+        widget: "string"
+        hint: "Shown under the photo when opened full-size, and read aloud by screen readers. Keep it short and accurate."
+      - label: "Month"
+        name: "date"
+        widget: "string"
+        required: false
+        pattern: ["^\\d{4}-(0[1-9]|1[0-2])$", "Use the format YYYY-MM, e.g. 2026-08"]
+        hint: "Controls sort order on the Gallery page (newest first). Leave blank for a general photo not tied to a specific month — it'll sort to the end."
+
+  - name: "blog"
+    label: "Blog Recaps"
+    label_singular: "Blog Recap"
+    folder: "content/blog"
+    create: true
+    delete: true
+    slug: "{{fields.id}}"
+    identifier_field: date
+    summary: "{{date}}"
+    sortable_fields: ["date"]
+    editor:
+      preview: false
+    fields:
+      - label: "Internal ID (don't change after creating)"
+        name: "id"
+        widget: "string"
+        pattern: ["^[a-z0-9-]+$", "Lowercase letters, numbers, and dashes only, e.g. august-2026"]
+        hint: "Used internally to keep this recap's data together. Set it once when creating the recap and leave it alone."
+      - label: "Month & Year"
+        name: "date"
+        widget: "string"
+        pattern: ["^\\d{4}-(0[1-9]|1[0-2])$", "Use the format YYYY-MM, e.g. 2026-08"]
+        hint: "Controls which recap is newest (shown at the top of the Blog page) and is shown on the date ribbon as \"August 2026\" — no need to type that separately."
+      - label: "Subtitle"
+        name: "subtitle"
+        widget: "string"
+        hint: "Shown under \"Inside Our Classroom:\" — e.g. August Recap"
+      - label: "Recap write-up"
+        name: "description"
+        widget: "text"
+      - label: "Cover photo"
+        name: "image"
+        widget: "relation"
+        collection: "gallery"
+        search_fields: ["label"]
+        value_field: "filename"
+        display_fields: ["label"]
+        hint: "Pick a photo already added in Gallery Photos. Not there yet? Add it in Gallery Photos first, then come back here."
+      - label: "Classroom Gallery photos"
+        name: "gallery"
+        widget: "relation"
+        collection: "gallery"
+        search_fields: ["label"]
+        value_field: "filename"
+        display_fields: ["label"]
+        multiple: true
+        hint: "The photo strip shown under this recap. Same rule as above — add photos in Gallery Photos first."
+      - label: "Focus of the Month"
+        name: "focus"
+        widget: "list"
+        hint: "The themes shown as pills, e.g. \"Outdoors and Nature\". Add, remove, or reorder freely."

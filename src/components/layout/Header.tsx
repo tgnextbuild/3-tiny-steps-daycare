@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { navLinks, siteConfig } from "@/data/site";
+import type { SearchEntry } from "@/lib/search";
 import { useClickOutside } from "@/lib/useClickOutside";
 
-export function Header() {
+export function Header({ searchIndex }: { searchIndex: SearchEntry[] }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLElement>(null);
@@ -75,7 +76,11 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center lg:flex">
-          <SearchBox className="w-40 xl:w-52" dropdownClassName="right-0 w-96" />
+          <SearchBox
+            searchIndex={searchIndex}
+            className="w-40 xl:w-52"
+            dropdownClassName="right-0 w-96"
+          />
         </div>
 
         <button
@@ -116,7 +121,7 @@ export function Header() {
               </li>
             ))}
           </ul>
-          <SearchBox className="mt-3 w-full" />
+          <SearchBox searchIndex={searchIndex} className="mt-3 w-full" />
         </nav>
       )}
     </header>
