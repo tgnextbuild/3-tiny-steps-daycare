@@ -148,6 +148,7 @@ collections:
       - label: "Focus of the Month"
         name: "focus"
         widget: "list"
+        field: { label: "Theme", name: "theme", widget: "string" }
         hint: "The themes shown as pills, e.g. \"Outdoors and Nature\". Add, remove, or reorder freely."
 
   - name: "staff"
@@ -210,4 +211,5 @@ collections:
           - label: "Bio"
             name: "bio"
             widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
             hint: "Each item becomes its own paragraph. Add, remove, or reorder freely."

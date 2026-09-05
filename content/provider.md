@@ -1,7 +1,7 @@
 ---
 name: Ms. Libia
 role: Owner & Child Care Provider
-photo: provider-ms-libia.jpg
+photo: staff/provider-ms-libia.jpg
 bio:
   - >-
     Ms. Libia, Owner and Child Care Provider, has always had a passion for
