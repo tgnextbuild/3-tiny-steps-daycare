@@ -15,7 +15,7 @@ export function FacilityOverview() {
           />
 
           <div className="relative mt-8 h-64 w-full overflow-hidden rounded-[2rem] sm:h-80">
-            <Photo photo={facility.image} />
+            <Photo photo={facility.image} sizes="(min-width: 1024px) 72rem, 100vw" />
           </div>
 
           <ul className="mt-8 flex flex-col divide-y divide-ink/15 sm:flex-row sm:flex-nowrap sm:justify-between sm:divide-x sm:divide-y-0">

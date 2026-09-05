@@ -6,12 +6,13 @@ the site, and each file starts with instructions for that part.
 
 **You do not need to touch any other folder to update the site's content.**
 
-**Exception: Blog Recaps and Gallery Photos are edited at `/admin`, not
-here.** Go to your site's URL followed by `/admin` (e.g.
-`https://yoursite.com/admin`), log in, and you'll see two sections there —
-"Blog Recaps" and "Gallery Photos" — with forms instead of code. See "How
-photos and recaps fit together" below for how those two connect. Everything
-else in this table is still a plain file you edit directly.
+**Exception: Blog Recaps, Gallery Photos, Meet the Staff, and Meet Our
+Provider are edited at `/admin`, not here.** Go to your site's URL
+followed by `/admin` (e.g. `https://yoursite.com/admin`), log in, and
+you'll see those four sections there — with forms instead of code. See
+"How photos and recaps fit together" below for how Blog Recaps and
+Gallery Photos connect. Everything else in this table is still a plain
+file you edit directly.
 
 ## Which file do I edit?
 
@@ -20,8 +21,8 @@ else in this table is still a plain file you edit directly.
 | Daycare name, menu links, social links   | `site.ts`            |
 | Home page                                | `home.ts`            |
 | Mission, core values, facility           | `about.ts`           |
-| **Ms. Libia's bio and photo**            | `provider.ts`        |
-| **Adding or removing a staff member**    | `staff.ts`           |
+| **Ms. Libia's bio and photo**            | `/admin` (Meet Our Provider) |
+| **Adding or removing a staff member**    | `/admin` (Meet the Staff) |
 | Programs page, age groups, curriculum    | `programs.ts`        |
 | **The daily schedule**                   | `daily-schedule.ts`  |
 | **Forms and downloadable resources**     | `resources.ts`       |
@@ -57,17 +58,18 @@ body: "Your child's first day",   ✅ double quotes, apostrophe is fine
 
 ## Adding photos
 
-Everywhere else on the site (staff photos, page headers, program photos —
-anywhere you see a `filename`/`label` pair that isn't in `gallery.ts`), save
+Everywhere else on the site (page headers, program photos, facility
+photos — anywhere you see a `filename`/`label` pair in a `.ts` file), save
 the photo into `public/images/` and use its exact file name:
 
 ```ts
-photo: { filename: "staff-ms-anna.jpg", label: "Photo of Ms. Anna" },
+photo: { filename: "facility-classroom.jpg", label: "Our main classroom" },
 ```
 
-Blog and Gallery photos are the one exception — those are uploaded through
-`/admin` (see "How photos and recaps fit together" below), not saved into a
-folder by hand.
+Blog photos, Gallery photos, staff photos, and Ms. Libia's photo are the
+exception — those are uploaded through `/admin` (see "How photos and
+recaps fit together" below for Blog/Gallery), not saved into a folder by
+hand.
 
 `label` is the description read aloud by screen readers and shown if the photo
 can't load, so keep it short and accurate.

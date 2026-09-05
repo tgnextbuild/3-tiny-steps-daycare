@@ -81,7 +81,12 @@ export function PageHero({
         <div
           className={`relative ${textFirst ? "order-2" : "order-1"} aspect-4/3 w-full overflow-hidden rounded-[2rem] lg:order-2 lg:aspect-auto lg:h-[26rem]`}
         >
-          <Photo photo={image} priority />
+          {/* Matches this component's own grid: full width below `lg`,
+              exactly half above it. Without this, `<Image fill>` defaults
+              to assuming the photo spans the full viewport, so every
+              page's hero — priority-loaded for fast paint — was fetching
+              roughly double the pixel area it actually needed on desktop. */}
+          <Photo photo={image} sizes="(min-width: 1024px) 50vw, 100vw" priority />
         </div>
       </div>
     </section>

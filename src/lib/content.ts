@@ -22,3 +22,15 @@ export function readContentCollection<T>(dir: string): T[] {
     .filter((file) => file.endsWith(".md"))
     .map((file) => matter(fs.readFileSync(path.join(fullDir, file), "utf8")).data as T);
 }
+
+/**
+ * Same idea as `readContentCollection`, but for a Decap "file collection" —
+ * a single fixed entry (e.g. `content/provider.md`) rather than a folder of
+ * many. Returns `null` if the file doesn't exist yet instead of throwing,
+ * so a fresh checkout without that file still builds.
+ */
+export function readContentFile<T>(filePath: string): T | null {
+  const fullPath = path.join(process.cwd(), filePath);
+  if (!fs.existsSync(fullPath)) return null;
+  return matter(fs.readFileSync(fullPath, "utf8")).data as T;
+}

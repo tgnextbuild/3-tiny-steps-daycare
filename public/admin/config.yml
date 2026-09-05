@@ -5,10 +5,12 @@
 #
 # IMPORTANT: each collection's `fields:` list below is mirrored BY HAND in
 # a TypeScript interface — "gallery" in src/data/gallery.ts (GalleryPhoto),
-# "blog" in src/data/blog-posts.ts (BlogPostFile). There's no runtime
-# validation tying the two together, so renaming/removing a field here
-# without updating that interface (or vice versa) fails silently at build
-# time instead of erroring — update both together.
+# "blog" in src/data/blog-posts.ts (BlogPostFile), "staff" in
+# src/data/staff.ts (StaffMemberFile), "provider" in src/data/provider.ts
+# (ProviderFile). There's no runtime validation tying the two together, so
+# renaming/removing a field here without updating that interface (or vice
+# versa) fails silently at build time instead of erroring — update both
+# together.
 #
 # The backend block below is DecapBridge's login/permissions layer, not
 # something to hand-edit — if it ever needs regenerating (e.g. the site's
@@ -147,3 +149,65 @@ collections:
         name: "focus"
         widget: "list"
         hint: "The themes shown as pills, e.g. \"Outdoors and Nature\". Add, remove, or reorder freely."
+
+  - name: "staff"
+    label: "Meet the Staff"
+    label_singular: "Staff Member"
+    folder: "content/staff"
+    create: true
+    delete: true
+    slug: "{{fields.name}}"
+    identifier_field: name
+    summary: "{{name}}"
+    editor:
+      preview: false
+    fields:
+      - label: "Name"
+        name: "name"
+        widget: "string"
+        hint: "e.g. Ms. Lilieth"
+      - label: "Photo"
+        name: "photo"
+        widget: "image"
+        # Staff/provider photos are site-wide (About page), not Blog/Gallery
+        # related, so they get their own upload folder rather than sharing
+        # public/images/gallery/ — see src/data/README.md.
+        media_folder: "/public/images/staff"
+        public_folder: "/images/staff"
+      - label: "Card color"
+        name: "accent"
+        widget: "select"
+        options: ["green", "crimson", "azure", "pastelAzure", "yellow"]
+      - label: "Credentials"
+        name: "credentials"
+        widget: "string"
+        hint: "e.g. CPR & First Aid Certified"
+      - label: "Favorite"
+        name: "favorite"
+        widget: "string"
+        hint: "e.g. Favorite: Storytime & Sing-Alongs"
+
+  - name: "provider"
+    label: "Meet Our Provider"
+    files:
+      - name: "provider"
+        label: "Meet Our Provider"
+        file: "content/provider.md"
+        fields:
+          - label: "Name"
+            name: "name"
+            widget: "string"
+            hint: "e.g. Ms. Libia"
+          - label: "Role"
+            name: "role"
+            widget: "string"
+            hint: "e.g. Owner & Child Care Provider"
+          - label: "Photo"
+            name: "photo"
+            widget: "image"
+            media_folder: "/public/images/staff"
+            public_folder: "/images/staff"
+          - label: "Bio"
+            name: "bio"
+            widget: "list"
+            hint: "Each item becomes its own paragraph. Add, remove, or reorder freely."
