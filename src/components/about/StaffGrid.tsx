@@ -20,12 +20,16 @@ export function StaffGrid() {
           ornament={{ icon: "leaf", className: "size-5 text-green-dark" }}
         />
 
-        <ul className="mx-auto mt-12 grid max-w-4xl gap-x-8 gap-y-14 sm:grid-cols-3">
+        {/* flex-wrap instead of a fixed grid so a partial last row (2
+            staff, or 4, etc.) centers as a group instead of hugging the
+            left edge — the grid's empty trailing cell was what looked
+            lopsided with an odd count. */}
+        <ul className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-x-8 gap-y-14">
           {staffMembers.map((member, index) => {
             const colors = accentClasses[member.accent];
             const tilt = tilts[index % tilts.length];
             return (
-              <li key={member.name} className="flex justify-center">
+              <li key={member.name} className="flex w-full justify-center sm:basis-1/3">
                 <div
                   id={`staff-${slugify(member.name)}`}
                   className={`relative w-full max-w-[15rem] scroll-mt-24 rounded-2xl bg-white pt-14 pb-6 text-center shadow-[0_16px_32px_-18px_rgba(43,36,32,0.35)] transition-transform duration-200 ${tilt} hover:rotate-0`}
